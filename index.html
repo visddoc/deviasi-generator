@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deviasi Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: #1a2a6c;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #555;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .taps-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .tap {
+            padding: 12px 20px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .tap:hover {
+            background: #e0e0e0;
+        }
+        
+        .tap.active {
+            background: #1a2a6c;
+            color: white;
+            border-color: #1a2a6c;
+            box-shadow: 0 4px 8px rgba(26, 42, 108, 0.3);
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+        
+        .input-with-btn {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-with-btn input {
+            flex: 1;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #1a2a6c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.2);
+        }
+        
+        .btn {
+            padding: 14px 20px;
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            background: #15225e;
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-auto {
+            background: #fdbb2d;
+            color: #333;
+            white-space: nowrap;
+        }
+        
+        .btn-auto:hover {
+            background: #fcaa00;
+        }
+        
+        .result-container {
+            background: #e8f4f8;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 2px dashed #1a2a6c;
+            margin-top: 20px;
+        }
+        
+        .result-container h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a2a6c;
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            font-family: monospace;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .instructions {
+            background: #f9f9f9;
+            border-left: 4px solid #1a2a6c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .instructions h4 {
+            margin-bottom: 8px;
+            color: #1a2a6c;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 600px) {
+            .taps-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tap {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .input-with-btn {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Deviasi Generator</h1>
+            <p>Alat untuk mempercepat pekerjaan PKL dalam membuat deviasi (potongan harga)</p>
+        </div>
+        
+        <div class="instructions">
+            <h4>Cara Penggunaan:</h4>
+            <ul>
+                <li>Pilih jenis deviasi yang ingin dihitung</li>
+                <li>Masukkan total bayar nasabah sesuai format</li>
+                <li>Gunakan tombol "Otomatis" untuk pembulatan atau masukkan manual</li>
+                <li>Masukkan diskon sebelumnya</li>
+                <li>Klik "Hitung" untuk mendapatkan hasil</li>
+                <li>Hasil akan otomatis disalin ke clipboard</li>
+            </ul>
+        </div>
+        
+        <div class="taps-container">
+            <div class="tap" data-type="bunga">Pengurangan Bunga</div>
+            <div class="tap active" data-type="denda">Pengurangan Denda</div>
+            <div class="tap" data-type="bunga-denda">Pengurangan Bunga & Denda</div>
+        </div>
+        
+        <div class="form-section">
+            <div class="form-group">
+                <label for="total-bayar">Total Bayar Nasabah</label>
+                <input type="text" id="total-bayar" placeholder="Contoh: 25,470,795.00">
+            </div>
+            
+            <div class="form-group">
+                <label for="pembulatan">Pembulatan</label>
+                <div class="input-with-btn">
+                    <input type="text" id="pembulatan" placeholder="Hasil pembulatan">
+                    <button class="btn btn-auto" id="btn-auto">Otomatis</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="diskon-sebelum">Total Diskon Sebelumnya</label>
+                <input type="text" id="diskon-sebelum" placeholder="Contoh: 500,000.00">
+            </div>
+            
+            <button class="btn" id="hitung">Hitung Deviasi</button>
+        </div>
+        
+        <div class="result-container">
+            <h3>Diskon Baru</h3>
+            <div class="result-value" id="hasil-diskon">-</div>
+            <p>Hasil telah otomatis disalin ke clipboard</p>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">Hasil berhasil disalin!</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elemen UI
+            const taps = document.querySelectorAll('.tap');
+            const totalBayarInput = document.getElementById('total-bayar');
+            const pembulatanInput = document.getElementById('pembulatan');
+            const diskonSebelumInput = document.getElementById('diskon-sebelum');
+            const btnAuto = document.getElementById('btn-auto');
+            const btnHitung = document.getElementById('hitung');
+            const hasilDiskon = document.getElementById('hasil-diskon');
+            const notification = document.getElementById('notification');
+            
+            // Aktifkan tap pertama
+            document.querySelector('.tap[data-type="denda"]').classList.add('active');
+            
+            // Fungsi untuk membersihkan format mata uang
+            function cleanCurrency(value) {
+                return parseFloat(value.replace(/[^\d.]/g, '')) || 0;
+            }
+            
+            // Fungsi untuk memformat angka ke mata uang
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('id-ID', { 
+                    minimumFractionDigits: 2, 
+                    maximumFractionDigits: 2 
+                }).format(value);
+            }
+            
+            // Fungsi untuk memformat angka ke format sederhana (tanpa koma/titik)
+            function formatSimpleNumber(value) {
+                return value.toLocaleString('id-ID', { 
+                    maximumFractionDigits: 0 
+                }).replace(/[.,]/g, '');
+            }
+            
+            // Fungsi untuk menampilkan notifikasi
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Event listener untuk tap
+            taps.forEach(tap => {
+                tap.addEventListener('click', function() {
+                    taps.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Event listener untuk tombol otomatis
+            btnAuto.addEventListener('click', function() {
+                const totalBayar = cleanCurrency(totalBayarInput.value);
+                
+                if (totalBayar === 0) {
+                    showNotification('Masukkan total bayar terlebih dahulu');
+                    return;
+                }
+                
+                // Bulatkan ke atas ke ribuan terdekat
+                const roundedValue = Math.ceil(totalBayar / 1000) * 1000;
+                pembulatanInput.value = formatCurrency(roundedValue);
+            });
+            
+            // Event listener untuk tombol hitung
+            btnHitung.addEventListener('click', function() {
+                const totalBayar = cleanCurrency(totalBayarInput.value);
+                const pembulatan = cleanCurrency(pembulatanInput.value);
+                const diskonSebelum = cleanCurrency(diskonSebelumInput.value);
+                
+                // Validasi input
+                if (totalBayar === 0) {
+                    showNotification('Total bayar nasabah harus diisi');
+                    return;
+                }
+                
+                if (pembulatan === 0) {
+                    showNotification('Pembulatan harus diisi');
+                    return;
+                }
+                
+                // Hitung diskon baru
+                const diskonBaru = pembulatan - (totalBayar - diskonSebelum);
+                
+                // Pastikan diskon baru tidak negatif
+                if (diskonBaru < 0) {
+                    showNotification('Hasil diskon tidak valid. Periksa input Anda.');
+                    hasilDiskon.textContent = 'Error';
+                    return;
+                }
+                
+                // Format hasil
+                const formattedResult = formatSimpleNumber(diskonBaru);
+                hasilDiskon.textContent = formattedResult;
+                
+                // Salin hasil ke clipboard
+                navigator.clipboard.writeText(formattedResult)
+                    .then(() => {
+                        showNotification('Hasil berhasil disalin ke clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Gagal menyalin teks: ', err);
+                    });
+            });
+            
+            // Format input saat ketik
+            [totalBayarInput, pembulatanInput, diskonSebelumInput].forEach(input => {
+                input.addEventListener('input', function() {
+                    let value = this.value.replace(/[^\d.]/g, '');
+                    
+                    // Format sebagai mata uang
+                    if (value) {
+                        const number = parseFloat(value) / 100;
+                        this.value = formatCurrency(number);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

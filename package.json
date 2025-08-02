@@ -1,0 +1,20 @@
+{
+  "name": "deviasi-generator",
+  "version": "1.0.0",
+  "description": "A Simple to Genertae Deviasi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/visddoc/deviasi-generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/visddoc/deviasi-generator/issues"
+  },
+  "homepage": "https://github.com/visddoc/deviasi-generator#readme"
+}
